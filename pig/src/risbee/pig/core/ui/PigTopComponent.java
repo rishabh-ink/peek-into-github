@@ -1,7 +1,26 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+peek-into-github
+
+Developed by Rishabh Rao
+rishabhsrao.wordpress.com
+rishabhsrao@gmail.com
+twitter.com/rishabhsrao
+
+This file is a part of peek-into-github.
+
+peek-into-github is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+peek-into-github is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with peek-into-github. If not, see <http://www.gnu.org/licenses/>.
+*/
 package risbee.pig.core.ui;
 
 import org.openide.util.NbBundle;
@@ -31,6 +50,7 @@ public final class PigTopComponent extends TopComponent {
 		setName(NbBundle.getMessage(PigTopComponent.class, "CTL_PigTopComponent"));
 		setToolTipText(NbBundle.getMessage(PigTopComponent.class, "HINT_PigTopComponent"));
 
+		
 	}
 
 	/** This method is called from within the constructor to
@@ -54,13 +74,7 @@ public final class PigTopComponent extends TopComponent {
         treeTableSplitPane.setDividerLocation(125);
         treeTableSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("User");
-        javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Repositories");
-        javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("ProjectOne");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("ProjectTwo");
-        treeNode2.add(treeNode3);
-        treeNode1.add(treeNode2);
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
         pigTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         treeScrollPane.setViewportView(pigTree);
 
@@ -72,29 +86,12 @@ public final class PigTopComponent extends TopComponent {
 
             },
             new String [] {
-                "Property", "Value"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
             }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        ));
         pigTable.setColumnSelectionAllowed(true);
         tableScrollPane.setViewportView(pigTable);
         pigTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        pigTable.getColumnModel().getColumn(0).setHeaderValue(org.openide.util.NbBundle.getMessage(PigTopComponent.class, "PigTopComponent.pigTable.columnModel.title0_1")); // NOI18N
-        pigTable.getColumnModel().getColumn(1).setHeaderValue(org.openide.util.NbBundle.getMessage(PigTopComponent.class, "PigTopComponent.pigTable.columnModel.title1_1")); // NOI18N
 
         treeTableSplitPane.setRightComponent(tableScrollPane);
 
