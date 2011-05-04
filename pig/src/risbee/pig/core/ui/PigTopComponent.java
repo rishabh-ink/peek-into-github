@@ -23,12 +23,21 @@ along with peek-into-github. If not, see <http://www.gnu.org/licenses/>.
 */
 package risbee.pig.core.ui;
 
+import java.util.prefs.Preferences;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.util.NbPreferences;
+import org.openide.util.RequestProcessor;
+import org.openide.util.RequestProcessor.Task;
+import org.openide.util.TaskListener;
+import risbee.pig.core.net.GithubRepos;
 
 /**
  * Top component which displays something.
@@ -50,7 +59,11 @@ public final class PigTopComponent extends TopComponent {
 		setName(NbBundle.getMessage(PigTopComponent.class, "CTL_PigTopComponent"));
 		setToolTipText(NbBundle.getMessage(PigTopComponent.class, "HINT_PigTopComponent"));
 
+		prefs = NbPreferences.forModule(PigPanel.class);
+		 
 		
+		
+		this.refresh();
 	}
 
 	/** This method is called from within the constructor to
@@ -67,6 +80,7 @@ public final class PigTopComponent extends TopComponent {
         pigTree = new javax.swing.JTree();
         tableScrollPane = new javax.swing.JScrollPane();
         pigTable = new javax.swing.JTable();
+        refreshPigButton = new javax.swing.JButton();
 
         pigContainerPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(PigTopComponent.class, "PigTopComponent.pigContainerPanel.border.title"))); // NOI18N
         pigContainerPanel.setLayout(new javax.swing.BoxLayout(pigContainerPanel, javax.swing.BoxLayout.Y_AXIS));
@@ -97,6 +111,14 @@ public final class PigTopComponent extends TopComponent {
 
         pigContainerPanel.add(treeTableSplitPane);
 
+        org.openide.awt.Mnemonics.setLocalizedText(refreshPigButton, org.openide.util.NbBundle.getMessage(PigTopComponent.class, "PigTopComponent.refreshPigButton.text")); // NOI18N
+        refreshPigButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshPigButtonActionPerformed(evt);
+            }
+        });
+        pigContainerPanel.add(refreshPigButton);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -115,10 +137,44 @@ public final class PigTopComponent extends TopComponent {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+	private void refreshPigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshPigButtonActionPerformed
+		this.refresh();
+	}//GEN-LAST:event_refreshPigButtonActionPerformed
+
+	/**
+	 * The root of the tree; shows the username.
+	 */
+	private DefaultMutableTreeNode githubRootNode;
+	/**
+	 * The stored preferences.
+	 */
+	Preferences prefs;
+		/**
+	 * The NetBeans Platform request processor.
+	 */
+	private RequestProcessor requestProcessor;
+		/**
+	 * The NetBeans Platform progress handle.
+	 */
+	private ProgressHandle progressHandle;
+	/**
+	 * The background task.
+	 */
+	private Task githubConnectTask;	
+	/**
+	 * The username of the Github user.
+	 */
+	private String githubUsername;
+	/**
+	 * The list of repositories.
+	 */
+	private GithubRepos repos;
+	
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel pigContainerPanel;
     private javax.swing.JTable pigTable;
     private javax.swing.JTree pigTree;
+    private javax.swing.JButton refreshPigButton;
     private javax.swing.JScrollPane tableScrollPane;
     private javax.swing.JScrollPane treeScrollPane;
     private javax.swing.JSplitPane treeTableSplitPane;
@@ -143,5 +199,57 @@ public final class PigTopComponent extends TopComponent {
 	void readProperties(java.util.Properties p) {
 		String version = p.getProperty("version");
 		// TODO read your settings according to their version
+	}
+
+	/**
+	 * Refreshes all the contents from Github.
+	 */
+	private void refresh() {
+		githubUsername = prefs.get("githubUsername", "github");
+		
+		// Create this root node before creating the new thread in startFetching.
+		githubRootNode = new DefaultMutableTreeNode(githubUsername);
+		
+		// Start the background task.
+		this.startFetching();
+	}
+	
+	/**
+	 * Starts the network communication and fetching process.
+	 */
+	public void startFetching() {
+		this.requestProcessor = new RequestProcessor(PigTopComponent.class.getName(), 1, true);
+		this.progressHandle = ProgressHandleFactory.createHandle(NbBundle.getBundle(PigTopComponent.class).getString("progressText"));
+		
+		Runnable runnable = new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Add your task here.
+				repos = new GithubRepos(githubUsername);				
+			}
+		};
+		
+		githubConnectTask = requestProcessor.create(runnable);
+		
+		githubConnectTask.addTaskListener(new TaskListener() {
+			@Override
+			public void taskFinished(org.openide.util.Task task) {
+				// Stop showing the progress handle.
+				progressHandle.finish();
+				
+				// Get the newly acquired tree.
+				githubRootNode.add(repos.getTree());
+				
+				// Update JTree UI.
+				pigTree.setModel(new DefaultTreeModel(githubRootNode));
+			}
+		});
+		
+		// Start showing the progress handle.
+		progressHandle.start();
+		
+		// Schedule and start the task with zero/no delay.
+		githubConnectTask.schedule(0);
 	}
 }

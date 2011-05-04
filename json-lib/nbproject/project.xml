@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>risbee.pig.lib.jsonlib</code-name-base>
+            <standalone/>
+            <module-dependencies/>
+            <public-packages>
+                <package>net.sf.json</package>
+                <package>net.sf.json.filters</package>
+                <package>net.sf.json.groovy</package>
+                <package>net.sf.json.processors</package>
+                <package>net.sf.json.regexp</package>
+                <package>net.sf.json.test</package>
+                <package>net.sf.json.util</package>
+                <package>net.sf.json.xml</package>
+            </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/json-lib-2.4-jdk15.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/json-lib-2.4-jdk15.jar</binary-origin>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>

@@ -23,8 +23,7 @@ along with peek-into-github. If not, see <http://www.gnu.org/licenses/>.
 */
 package risbee.pig.core.net;
 
-import org.idlesoft.libraries.ghapi.APIAbstract.Response;
-import org.idlesoft.libraries.ghapi.GitHubAPI;
+import com.github.api.v2.services.GitHubServiceFactory;
 import org.openide.util.NbBundle;
 
 
@@ -34,31 +33,24 @@ import org.openide.util.NbBundle;
  * from Github.
  * @author Rishabh Rao
  */
-public class GithubCommunicator {
-	/**
-	 * This is the main point of contact between us and Github.
-	 */
-	protected GitHubAPI ghapi;
-	
-	/**
-	 * This contains the response JSON string from Github.
-	 */
-	protected Response result;
-	
+public class Github {	
 	/**
 	 * The username of the Github user.
 	 */
 	protected String githubUsername;
+	
+	/**
+	 * github-java-sdk service factory.
+	 */
+	protected GitHubServiceFactory ghsfactory;
 
 	/**
-	 * Initializes the <code>GitHubAPI</code> and <code>Response</code> objects.
-	 * @see GitHubAPI
-	 * @see Response
+	 * Initializes the communicator object with Github username.
 	 */
-	public GithubCommunicator(final String githubUsername) {
-		result = new Response();
-		ghapi = new GitHubAPI();
+	public Github(final String githubUsername) {
 		this.setGithubUsername(githubUsername);
+		
+		ghsfactory = GitHubServiceFactory.newInstance();
 	}
 
 	/**
@@ -68,10 +60,24 @@ public class GithubCommunicator {
 	public final void setGithubUsername(final String githubUsername) {
 		if(githubUsername.trim().isEmpty()) {
 			throw new IllegalArgumentException(
-					NbBundle.getMessage(GithubCommunicator.class,
+					NbBundle.getMessage(Github.class,
 					"GithubCommunicator.setGithubUsername.IllegalArgumentException.message"));
 		}
 		
 		this.githubUsername = githubUsername.trim();
+	}
+	
+	/**
+	 * Gets the Github username.
+	 * @return The username of the Github user.
+	 */
+	public String getGithubUsername() {
+		return githubUsername;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + Github.class.getName() +
+				": Github username=" + this.getGithubUsername();
 	}
 }

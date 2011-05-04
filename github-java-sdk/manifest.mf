@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: risbee.pig.lib.githubjavasdk
+OpenIDE-Module-Localizing-Bundle: risbee/pig/lib/githubjavasdk/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

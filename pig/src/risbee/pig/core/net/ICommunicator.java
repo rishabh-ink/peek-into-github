@@ -23,6 +23,8 @@ along with peek-into-github. If not, see <http://www.gnu.org/licenses/>.
 */
 package risbee.pig.core.net;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 /**
  * This interface must be implemented by the classes communicating with
  * Github.
@@ -33,4 +35,10 @@ public interface ICommunicator {
 	 * This method refreshes the local data with fresh data from Github.
 	 */
 	public void refresh();
+	
+	/**
+	 * Gets the ready-to-display tree made of the Github data.
+	 * @return A sub-tree which can be attached to the JTree's root node.
+	 */
+	public DefaultMutableTreeNode getTree();
 }
