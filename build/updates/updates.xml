@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE module_updates PUBLIC "-//NetBeans//DTD Autoupdate Catalog 2.6//EN" "http://www.netbeans.org/dtds/autoupdate-catalog-2_6.dtd">
+<module_updates timestamp="51/57/21/05/05/2011">
+
+
+<module autoload="true" codenamebase="risbee.pig.lib.githubjavasdk" distribution="risbee-pig-lib-githubjavasdk.nbm" downloadsize="39395" homepage="" license="AD9FBBC9" moduleauthor="" needsrestart="false" releasedate="2011/05/06">
+    <manifest AutoUpdate-Show-In-Client="false" OpenIDE-Module="risbee.pig.lib.githubjavasdk" OpenIDE-Module-Implementation-Version="110505" OpenIDE-Module-Java-Dependencies="Java &gt; 1.4" OpenIDE-Module-Module-Dependencies="risbee.pig.lib.gson &gt; 1.0" OpenIDE-Module-Name="github-java-sdk-release-0.1-release" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+    
+</module>
+
+<module autoload="true" codenamebase="risbee.pig.lib.gson" distribution="risbee-pig-lib-gson.nbm" downloadsize="50073" homepage="" license="1D20D81A" moduleauthor="" needsrestart="false" releasedate="2011/05/06">
+    <manifest AutoUpdate-Show-In-Client="false" OpenIDE-Module="risbee.pig.lib.gson" OpenIDE-Module-Implementation-Version="110505" OpenIDE-Module-Java-Dependencies="Java &gt; 1.4" OpenIDE-Module-Name="gson" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+    
+</module>
+
+<module codenamebase="risbee.pig.core" distribution="risbee-pig-core.nbm" downloadsize="15381" homepage="" license="AD9FBBC9" moduleauthor="" needsrestart="false" releasedate="2011/05/06">
+    <manifest AutoUpdate-Show-In-Client="true" OpenIDE-Module="risbee.pig.core" OpenIDE-Module-Implementation-Version="110505" OpenIDE-Module-Java-Dependencies="Java &gt; 1.6" OpenIDE-Module-Module-Dependencies="org.netbeans.api.progress/1 &gt; 1.23.1, org.netbeans.modules.options.api/1 &gt; 1.21.1, org.netbeans.modules.settings/1 &gt; 1.30.1, org.openide.awt &gt; 7.30.1, org.openide.dialogs &gt; 7.18.1, org.openide.util &gt; 8.14.1, org.openide.util.lookup &gt; 8.6.1, org.openide.windows &gt; 6.39.1, risbee.pig.lib.githubjavasdk &gt; 1.0" OpenIDE-Module-Name="pig" OpenIDE-Module-Requires="org.openide.windows.WindowManager, org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+    
+</module>
+
+<license name="1D20D81A" url="licenses/1D20D81A.license"/>
+<license name="AD9FBBC9" url="licenses/AD9FBBC9.license"/>
+</module_updates>
+
