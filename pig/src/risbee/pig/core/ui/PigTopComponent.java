@@ -69,8 +69,11 @@ public final class PigTopComponent extends TopComponent {
 		setToolTipText(NbBundle.getMessage(PigTopComponent.class, "HINT_PigTopComponent"));
 
 		prefs = NbPreferences.forModule(PigPanel.class);
-
-		this.refresh();
+		
+		// Refresh on startup only if specified.
+		if(prefs.getBoolean("refreshOnStartup", false)) {
+			this.refresh();
+		}
 	}
 
 	/** This method is called from within the constructor to
@@ -92,14 +95,17 @@ public final class PigTopComponent extends TopComponent {
         pigContainerPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(PigTopComponent.class, "PigTopComponent.pigContainerPanel.border.title"))); // NOI18N
         pigContainerPanel.setLayout(new javax.swing.BoxLayout(pigContainerPanel, javax.swing.BoxLayout.Y_AXIS));
 
+        treeTableSplitPane.setBorder(null);
         treeTableSplitPane.setDividerLocation(125);
         treeTableSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Click refresh");
         pigTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         treeScrollPane.setViewportView(pigTree);
 
         treeTableSplitPane.setTopComponent(treeScrollPane);
+
+        tableScrollPane.setBorder(null);
 
         pigTable.setAutoCreateRowSorter(true);
         pigTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -121,6 +127,7 @@ public final class PigTopComponent extends TopComponent {
         refreshPigButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/risbee/pig/core/res/refersh_16.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(refreshPigButton, org.openide.util.NbBundle.getMessage(PigTopComponent.class, "PigTopComponent.refreshPigButton.text")); // NOI18N
         refreshPigButton.setToolTipText(org.openide.util.NbBundle.getMessage(PigTopComponent.class, "PigTopComponent.refreshPigButton.toolTipText")); // NOI18N
+        refreshPigButton.setMaximumSize(new java.awt.Dimension(32767, 32767));
         refreshPigButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 refreshPigButtonActionPerformed(evt);

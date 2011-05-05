@@ -24,9 +24,9 @@ along with peek-into-github. If not, see <http://www.gnu.org/licenses/>.
 package risbee.pig.core.ui;
 
 import org.openide.util.NbPreferences;
+import risbee.pig.core.net.Github;
 
 final class PigPanel extends javax.swing.JPanel {
-
 	private final PigOptionsPanelController controller;
 
 	PigPanel(PigOptionsPanelController controller) {
@@ -46,17 +46,22 @@ final class PigPanel extends javax.swing.JPanel {
         pigOptionsContainerPanel = new javax.swing.JPanel();
         githubUsernameLabel = new javax.swing.JLabel();
         githubUsernameTextField = new javax.swing.JTextField();
+        refreshOnStartupCheckbox = new javax.swing.JCheckBox();
 
         pigOptionsContainerPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(PigPanel.class, "PigPanel.pigOptionsContainerPanel.border.title"))); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(githubUsernameLabel, org.openide.util.NbBundle.getMessage(PigPanel.class, "PigPanel.githubUsernameLabel.text")); // NOI18N
 
-        githubUsernameTextField.setText(org.openide.util.NbBundle.getMessage(PigPanel.class, "PigPanel.githubUsernameTextField.text")); // NOI18N
+        githubUsernameTextField.setText(Github.DEFAULT_USERNAME);
+        githubUsernameTextField.setToolTipText(org.openide.util.NbBundle.getMessage(PigPanel.class, "PigPanel.githubUsernameTextField.toolTipText")); // NOI18N
         githubUsernameTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 githubUsernameTextFieldActionPerformed(evt);
             }
         });
+
+        org.openide.awt.Mnemonics.setLocalizedText(refreshOnStartupCheckbox, org.openide.util.NbBundle.getMessage(PigPanel.class, "PigPanel.refreshOnStartupCheckbox.text")); // NOI18N
+        refreshOnStartupCheckbox.setToolTipText(org.openide.util.NbBundle.getMessage(PigPanel.class, "PigPanel.refreshOnStartupCheckbox.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout pigOptionsContainerPanelLayout = new javax.swing.GroupLayout(pigOptionsContainerPanel);
         pigOptionsContainerPanel.setLayout(pigOptionsContainerPanelLayout);
@@ -64,9 +69,12 @@ final class PigPanel extends javax.swing.JPanel {
             pigOptionsContainerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pigOptionsContainerPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(githubUsernameLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(githubUsernameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
+                .addGroup(pigOptionsContainerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pigOptionsContainerPanelLayout.createSequentialGroup()
+                        .addComponent(githubUsernameLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(githubUsernameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE))
+                    .addComponent(refreshOnStartupCheckbox))
                 .addContainerGap())
         );
         pigOptionsContainerPanelLayout.setVerticalGroup(
@@ -76,7 +84,9 @@ final class PigPanel extends javax.swing.JPanel {
                 .addGroup(pigOptionsContainerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(githubUsernameLabel)
                     .addComponent(githubUsernameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(291, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(refreshOnStartupCheckbox)
+                .addContainerGap(260, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -102,7 +112,7 @@ final class PigPanel extends javax.swing.JPanel {
 	}//GEN-LAST:event_githubUsernameTextFieldActionPerformed
 
 	void load() {
-		// TODO read settings and initialize GUI
+		// read settings and initialize GUI
 		// Example:        
 		// someCheckBox.setSelected(Preferences.userNodeForPackage(PigPanel.class).getBoolean("someFlag", false));
 		// or for org.openide.util with API spec. version >= 7.4:
@@ -111,11 +121,14 @@ final class PigPanel extends javax.swing.JPanel {
 		// someTextField.setText(SomeSystemOption.getDefault().getSomeStringProperty());
 		
 		// Retrieve the Github username.
-		githubUsernameTextField.setText(NbPreferences.forModule(PigPanel.class).get("githubUsername", ""));
+		githubUsernameTextField.setText(NbPreferences.forModule(PigPanel.class).get("githubUsername", Github.DEFAULT_USERNAME));
+		
+		// Retrieve refresh on startup option.
+		refreshOnStartupCheckbox.setSelected(NbPreferences.forModule(PigPanel.class).getBoolean("refreshOnStartup", false));
 	}
 
 	void store() {
-		// TODO store modified settings
+		// store modified settings
 		// Example:
 		// Preferences.userNodeForPackage(PigPanel.class).putBoolean("someFlag", someCheckBox.isSelected());
 		// or for org.openide.util with API spec. version >= 7.4:
@@ -123,8 +136,14 @@ final class PigPanel extends javax.swing.JPanel {
 		// or:
 		// SomeSystemOption.getDefault().setSomeStringProperty(someTextField.getText());
 		
-		// Store the Github username.
-		NbPreferences.forModule(PigPanel.class).put("githubUsername", githubUsernameTextField.getText());
+		// Store only if the form is valid.
+		if(this.valid()) {
+			// Store the Github username.
+			NbPreferences.forModule(PigPanel.class).put("githubUsername", githubUsernameTextField.getText());
+
+			// Store refresh on startup option.
+			NbPreferences.forModule(PigPanel.class).putBoolean("refreshOnStartup", refreshOnStartupCheckbox.isSelected());
+		}
 	}
 
 	boolean valid() {
@@ -132,14 +151,15 @@ final class PigPanel extends javax.swing.JPanel {
 		
 		// Don't allow an empty username.
 		if(githubUsernameTextField.getText().trim().isEmpty()) {
-			return false;
-		} else {
-			return true;
+			githubUsernameTextField.setText(Github.DEFAULT_USERNAME);
 		}
+		
+		return true;		
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel githubUsernameLabel;
     private javax.swing.JTextField githubUsernameTextField;
     private javax.swing.JPanel pigOptionsContainerPanel;
+    private javax.swing.JCheckBox refreshOnStartupCheckbox;
     // End of variables declaration//GEN-END:variables
 }

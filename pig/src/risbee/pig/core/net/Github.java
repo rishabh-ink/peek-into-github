@@ -41,6 +41,13 @@ public class Github {
 	 */
 	protected String githubUsername;
 	
+		
+	/**
+	 * The default username used if no name is specified.
+	 * <p>The value assigned is <code>github</code>.</p>
+	 */
+	public static final String DEFAULT_USERNAME = "github";
+	
 	/**
 	 * github-java-sdk service factory.
 	 */
