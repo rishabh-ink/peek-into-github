@@ -20,13 +20,18 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with peek-into-github. If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package risbee.pig.core.net;
 
+import com.github.api.v2.schema.Language;
 import com.github.api.v2.schema.Repository;
 import com.github.api.v2.services.GitHubException;
 import com.github.api.v2.services.RepositoryService;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.ResourceBundle;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.openide.util.NbBundle;
 
@@ -35,11 +40,11 @@ import org.openide.util.NbBundle;
  * @author Rishabh Rao
  */
 public final class GithubRepos extends Github implements ICommunicator {
+
 	/**
 	 * This contains the list of all repositories.
 	 */
 	private List<Repository> reposList;
-	
 	/**
 	 * github-java-sdk repository service factory.
 	 */
@@ -50,7 +55,7 @@ public final class GithubRepos extends Github implements ICommunicator {
 	 */
 	public GithubRepos(String githubUsername) throws GitHubException {
 		super(githubUsername);
-		
+
 		// Initialize and refresh for the first time.
 		this.repoService = super.ghsfactory.createRepositoryService();
 		this.refresh();
@@ -60,9 +65,8 @@ public final class GithubRepos extends Github implements ICommunicator {
 	 * Refreshes the list of repositories stored in <code>reposList</code>.
 	 */
 	@Override
-	public void refresh() throws GitHubException {	
-		this.reposList = this.repoService.
-				getRepositories(super.getGithubUsername());
+	public void refresh() throws GitHubException {
+		this.reposList = this.repoService.getRepositories(super.getGithubUsername());
 	}
 
 	/**
@@ -73,14 +77,127 @@ public final class GithubRepos extends Github implements ICommunicator {
 	public DefaultMutableTreeNode getTree() throws RuntimeException {
 		DefaultMutableTreeNode subTree = new DefaultMutableTreeNode(NbBundle.getBundle(GithubRepos.class).getString("repositoriesRootNode"));
 		DefaultMutableTreeNode repoNode;
-		
+
 		// Scan through all the repositories and build the tree.
-		for(Repository currentRepository : this.reposList) {
+		for (Repository currentRepository : this.reposList) {
 			repoNode = new DefaultMutableTreeNode(currentRepository.getName());
 			subTree.add(repoNode);
 		}
-		
+
 		return subTree;
+	}
+
+	/**
+	 * Gets the ready-to-display table made of the Repository data.
+	 * @param repoName For which repo the table data show be fetched.
+	 * @return A sub-tree which can be attached to the JTable.
+	 */
+	@Override
+	public TableModel getTable(String repoName) throws GitHubException {
+		DefaultTableModel repoTableModel = new DefaultTableModel();
+
+		repoTableModel.setColumnIdentifiers(
+				new String[]{
+					NbBundle.getBundle(GithubRepos.class).getString("RepoTable.property"),
+					NbBundle.getBundle(GithubRepos.class).getString("RepoTable.value")
+				});
+
+		ListIterator<Repository> li = reposList.listIterator();
+		boolean repoExists = false;
+		Repository currentRepo = null;
+
+		// Search through the repos lists for the given repo name.
+		while (li.hasNext()) {
+			currentRepo = li.next();
+
+			if (repoName.equals(currentRepo.getName())) {
+				repoExists = true;
+				break;
+			}
+		}
+
+		// This should not happen technically.
+		if (!repoExists || currentRepo == null) {
+			throw new GitHubException(repoName + NbBundle.getBundle(GithubRepos.class).getString("Error.repoNotFound"));
+		}
+
+		ResourceBundle properties = NbBundle.getBundle(GithubRepos.class);
+
+		// Populate data.
+		if (currentRepo.getName() != null) {
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.name"),});
+		}
+		if (currentRepo.getDescription() != null) {
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.description"), currentRepo.getDescription()});
+		}
+		if (currentRepo.getOwner() != null) {
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.owner"), currentRepo.getOwner()});
+		}
+		if (currentRepo.getHomepage() != null) {
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.homepage"), currentRepo.getHomepage()});
+		}
+		if (currentRepo.getSource() != null) {
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.source"), currentRepo.getSource()});
+		}
+		if (currentRepo.getUrl() != null) {
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.url"), currentRepo.getUrl()});
+		}
+		if (currentRepo.getOrganization() != null) {
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.organization"), currentRepo.getOrganization()});
+		}
+		if (currentRepo.getCreatedAt() != null) {
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.created"), currentRepo.getCreatedAt().toString()});
+		}
+		
+		repoTableModel.addRow(new String[]{properties.getString("RepoDetails.followers"), Integer.toString(currentRepo.getFollowers())});
+		
+		
+		repoTableModel.addRow(new String[]{properties.getString("RepoDetails.forks"), Integer.toString(currentRepo.getForks())});
+		
+		
+		repoTableModel.addRow(new String[]{properties.getString("RepoDetails.openIssues"), Integer.toString(currentRepo.getOpenIssues())});
+		
+		
+		repoTableModel.addRow(new String[]{properties.getString("RepoDetails.actions"), Integer.toString(currentRepo.getActions())});
+		
+		
+		repoTableModel.addRow(new String[]{properties.getString("RepoDetails.watchers"), Integer.toString(currentRepo.getWatchers())});
+		
+		
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.hasDownloads"), Boolean.toString(currentRepo.isHasDownloads())});
+		
+		
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.fork"), Boolean.toString(currentRepo.isFork())});
+		
+		
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.hasIssues"), Boolean.toString(currentRepo.isHasIssues())});
+		
+		
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.hasWiki"), Boolean.toString(currentRepo.isHasWiki())});
+		
+		if (currentRepo.getId() != null) {
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.id"), currentRepo.getId()});
+		}
+		if (currentRepo.getLanguage() != null) {
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.language"), currentRepo.getLanguage().value()});
+		}
+		if (currentRepo.getPushedAt() != null) {
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.pushed"), currentRepo.getPushedAt().toString()});
+		}
+		if (Double.toString(currentRepo.getScore()) != null) {
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.score"), Double.toString(currentRepo.getScore())});
+		}
+		if (Long.toString(currentRepo.getSize()) != null) {
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.score"), Long.toString(currentRepo.getSize())});
+		}
+		if (currentRepo.getUsername() != null) {
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.username"), currentRepo.getUsername()});
+		}
+		if (currentRepo.getVisibility() != null) {
+			repoTableModel.addRow(new String[]{properties.getString("RepoDetails.visibility"), currentRepo.getVisibility().value()});
+		}
+
+		return repoTableModel;
 	}
 
 	@Override

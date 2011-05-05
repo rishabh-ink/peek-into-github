@@ -47,6 +47,7 @@ final class PigPanel extends javax.swing.JPanel {
         githubUsernameLabel = new javax.swing.JLabel();
         githubUsernameTextField = new javax.swing.JTextField();
         refreshOnStartupCheckbox = new javax.swing.JCheckBox();
+        developerLabel = new javax.swing.JLabel();
 
         pigOptionsContainerPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(PigPanel.class, "PigPanel.pigOptionsContainerPanel.border.title"))); // NOI18N
 
@@ -63,6 +64,9 @@ final class PigPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(refreshOnStartupCheckbox, org.openide.util.NbBundle.getMessage(PigPanel.class, "PigPanel.refreshOnStartupCheckbox.text")); // NOI18N
         refreshOnStartupCheckbox.setToolTipText(org.openide.util.NbBundle.getMessage(PigPanel.class, "PigPanel.refreshOnStartupCheckbox.toolTipText")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(developerLabel, org.openide.util.NbBundle.getMessage(PigPanel.class, "PigPanel.developerLabel.text")); // NOI18N
+        developerLabel.setToolTipText(org.openide.util.NbBundle.getMessage(PigPanel.class, "PigPanel.developerLabel.toolTipText")); // NOI18N
+
         javax.swing.GroupLayout pigOptionsContainerPanelLayout = new javax.swing.GroupLayout(pigOptionsContainerPanel);
         pigOptionsContainerPanel.setLayout(pigOptionsContainerPanelLayout);
         pigOptionsContainerPanelLayout.setHorizontalGroup(
@@ -74,7 +78,8 @@ final class PigPanel extends javax.swing.JPanel {
                         .addComponent(githubUsernameLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(githubUsernameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE))
-                    .addComponent(refreshOnStartupCheckbox))
+                    .addComponent(refreshOnStartupCheckbox)
+                    .addComponent(developerLabel, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         pigOptionsContainerPanelLayout.setVerticalGroup(
@@ -86,7 +91,9 @@ final class PigPanel extends javax.swing.JPanel {
                     .addComponent(githubUsernameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(refreshOnStartupCheckbox)
-                .addContainerGap(260, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 233, Short.MAX_VALUE)
+                .addComponent(developerLabel)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -157,6 +164,7 @@ final class PigPanel extends javax.swing.JPanel {
 		return true;		
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel developerLabel;
     private javax.swing.JLabel githubUsernameLabel;
     private javax.swing.JTextField githubUsernameTextField;
     private javax.swing.JPanel pigOptionsContainerPanel;

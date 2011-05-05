@@ -24,6 +24,7 @@ along with peek-into-github. If not, see <http://www.gnu.org/licenses/>.
 package risbee.pig.core.net;
 
 import com.github.api.v2.services.GitHubException;
+import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -42,4 +43,11 @@ public interface ICommunicator {
 	 * @return A sub-tree which can be attached to the JTree's root node.
 	 */
 	public DefaultMutableTreeNode getTree() throws GitHubException;
+	
+	/**
+	 * Gets the ready-to-display table made of the Github data.
+	 * @param repoName The name of the repository.
+	 * @return A sub-tree which can be attached to the JTable.
+	 */
+	public TableModel getTable(String repoName) throws GitHubException;
 }

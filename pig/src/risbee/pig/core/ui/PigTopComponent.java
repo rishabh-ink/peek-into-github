@@ -24,12 +24,10 @@ along with peek-into-github. If not, see <http://www.gnu.org/licenses/>.
 package risbee.pig.core.ui;
 
 import com.github.api.v2.services.GitHubException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-import javax.swing.ImageIcon;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import org.netbeans.api.progress.ProgressHandle;
@@ -37,10 +35,8 @@ import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.awt.NotificationDisplayer;
 import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
@@ -54,19 +50,22 @@ import risbee.pig.core.notification.ErrorNotifier;
 @ConvertAsProperties(dtd = "-//risbee.pig.core.ui//Pig//EN",
 autostore = false)
 @TopComponent.Description(preferredID = "PigTopComponent",
-iconBase = "risbee/pig/core/res/bee_16.png",
+iconBase = "risbee/pig/core/ui/res/bee_16.png",
 persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "rightSlidingSide", openAtStartup = false)
 @ActionID(category = "Window", id = "risbee.pig.core.ui.PigTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_PigAction",
 preferredID = "PigTopComponent")
-public final class PigTopComponent extends TopComponent {
+public final class PigTopComponent extends TopComponent implements TreeSelectionListener {
 
 	public PigTopComponent() {
 		initComponents();
 		setName(NbBundle.getMessage(PigTopComponent.class, "CTL_PigTopComponent"));
 		setToolTipText(NbBundle.getMessage(PigTopComponent.class, "HINT_PigTopComponent"));
+		
+		// FIXME Make another TreeSelectionListenerImpl class. Don't use this!
+		pigTree.addTreeSelectionListener(this);
 
 		prefs = NbPreferences.forModule(PigPanel.class);
 		
@@ -124,7 +123,7 @@ public final class PigTopComponent extends TopComponent {
 
         pigContainerPanel.add(treeTableSplitPane);
 
-        refreshPigButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/risbee/pig/core/res/refersh_16.png"))); // NOI18N
+        refreshPigButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/risbee/pig/core/ui/res/refersh_16.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(refreshPigButton, org.openide.util.NbBundle.getMessage(PigTopComponent.class, "PigTopComponent.refreshPigButton.text")); // NOI18N
         refreshPigButton.setToolTipText(org.openide.util.NbBundle.getMessage(PigTopComponent.class, "PigTopComponent.refreshPigButton.toolTipText")); // NOI18N
         refreshPigButton.setMaximumSize(new java.awt.Dimension(32767, 32767));
@@ -174,6 +173,11 @@ public final class PigTopComponent extends TopComponent {
 	 * The username of the Github user.
 	 */
 	private String githubUsername;
+	
+	/**
+	 * The tree model for the property-value table.
+	 */
+	private TableModel pigTableModel;
 	/**
 	 * The list of repositories.
 	 */
@@ -216,19 +220,19 @@ public final class PigTopComponent extends TopComponent {
 	private void refresh() {
 
 		// Get from preferences. Default to "github" as the username.
-		githubUsername = prefs.get("githubUsername", "github");
+		githubUsername = prefs.get("githubUsername", GithubRepos.DEFAULT_USERNAME);
 
-		// Create this root node before creating the new thread in startFetching.
+		// Create this root node before creating the new thread in fetchAllRepos.
 		githubRootNode = new DefaultMutableTreeNode(githubUsername);
 
 		// Start the background task.
-		this.startFetching();
+		this.fetchAllRepos();
 	}
 
 	/**
-	 * Starts the network communication and fetching process.
+	 * Starts the network communication and fetches all the repos.
 	 */
-	synchronized public void startFetching() {
+	synchronized public void fetchAllRepos() {
 		RequestProcessor requestProcessor = new RequestProcessor(PigTopComponent.class.getName(), 1, true);
 		final ProgressHandle progressHandle = ProgressHandleFactory.createHandle(NbBundle.getBundle(PigTopComponent.class).getString("progressText"));
 
@@ -237,7 +241,7 @@ public final class PigTopComponent extends TopComponent {
 			@Override
 			public void run() {				
 				try {
-					// Try to fetch repos; report any errors via bubble notification
+					// Try to fetch repos; report any errors via bubble notification.
 					repos = new GithubRepos(githubUsername);
 				} catch (GitHubException ex) {
 					new ErrorNotifier().show(ex);
@@ -270,9 +274,78 @@ public final class PigTopComponent extends TopComponent {
 
 					// Update JTree UI.
 					pigTree.setModel(new DefaultTreeModel(githubRootNode));
-
+										
 					// Enable the button again.
 					refreshPigButton.setEnabled(true);
+				} catch(Exception ex) {
+					new ErrorNotifier().show(ex);
+				}
+			}
+		});
+
+		// Start showing the progress handle.
+		progressHandle.start();
+
+		// Schedule and start the task with zero/no delay.
+		githubConnectTask.schedule(0);
+	}
+	
+	@Override
+	public void valueChanged(TreeSelectionEvent tse) {
+		// This method is assumed to occur after fetchAllRepos method is executed atleast once.
+		DefaultMutableTreeNode selNode = (DefaultMutableTreeNode) pigTree.getLastSelectedPathComponent();
+
+		if(selNode == null) {
+			return;
+		}
+
+		// FIXME Right now, there are only repositories, so this will work. But need to find out whether the leaf is a child of the Repositories node.
+		if(selNode.isLeaf()) {
+			this.fetchTable((String) selNode.getUserObject());
+		}
+	}
+	
+	/**
+	 * Starts the network communication and fetches the table for the given repo.
+	 */
+	synchronized public void fetchTable(final String repoName) {
+		RequestProcessor requestProcessor = new RequestProcessor(PigTopComponent.class.getName(), 1, true);
+		final ProgressHandle progressHandle = ProgressHandleFactory.createHandle(NbBundle.getBundle(PigTopComponent.class).getString("progressText"));
+		
+		Runnable runnable = new Runnable() {
+
+			@Override
+			public void run() {				
+				try {
+					// Try to fetch repos; report any errors via bubble notification.
+					pigTableModel = repos.getTable(repoName);
+				} catch (GitHubException ex) {
+					new ErrorNotifier().show(ex);
+				}
+			}
+		};
+
+		// Create a new task using the runnable.
+		githubConnectTask = requestProcessor.create(runnable);
+
+		// Add a task listener to keep track of the progress.
+		githubConnectTask.addTaskListener(new TaskListener() {
+
+			@Override
+			public void taskFinished(org.openide.util.Task task) {
+				try {
+					// Stop showing the progress handle.
+					progressHandle.finish();
+
+					// In case the repo cannot be loaded, this will be null
+					// thus will cause a null pointer exception.
+					if(pigTableModel != null) {
+						// Update JTable UI.
+						pigTable.setModel(pigTableModel);
+					} else {
+						// In case the repo cannot be fetched, then remove all.
+						pigTable.removeAll();
+					}					
 				} catch(Exception ex) {
 					new ErrorNotifier().show(ex);
 				}
