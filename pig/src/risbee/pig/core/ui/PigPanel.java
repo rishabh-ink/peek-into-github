@@ -23,8 +23,14 @@ along with peek-into-github. If not, see <http://www.gnu.org/licenses/>.
 */
 package risbee.pig.core.ui;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
 import risbee.pig.core.net.Github;
+import risbee.pig.core.notification.ErrorNotifier;
 
 final class PigPanel extends javax.swing.JPanel {
 	private final PigOptionsPanelController controller;
@@ -66,6 +72,11 @@ final class PigPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(developerLabel, org.openide.util.NbBundle.getMessage(PigPanel.class, "PigPanel.developerLabel.text")); // NOI18N
         developerLabel.setToolTipText(org.openide.util.NbBundle.getMessage(PigPanel.class, "PigPanel.developerLabel.toolTipText")); // NOI18N
+        developerLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                developerLabelMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout pigOptionsContainerPanelLayout = new javax.swing.GroupLayout(pigOptionsContainerPanel);
         pigOptionsContainerPanel.setLayout(pigOptionsContainerPanelLayout);
@@ -117,6 +128,18 @@ final class PigPanel extends javax.swing.JPanel {
 	private void githubUsernameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_githubUsernameTextFieldActionPerformed
 		// TODO add your handling code here:
 	}//GEN-LAST:event_githubUsernameTextFieldActionPerformed
+
+	private void developerLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_developerLabelMouseClicked
+		if(Desktop.isDesktopSupported()) {
+			try {
+				Desktop.getDesktop().browse((new URL("http://github.com/rishabhsrao/peek-into-github")).toURI());
+			} catch (IOException ex) {
+				new ErrorNotifier().show(ex);
+			} catch(URISyntaxException ex) {
+				new ErrorNotifier().show(ex);
+			}
+		}
+	}//GEN-LAST:event_developerLabelMouseClicked
 
 	void load() {
 		// read settings and initialize GUI
