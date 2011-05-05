@@ -23,8 +23,10 @@ along with peek-into-github. If not, see <http://www.gnu.org/licenses/>.
 */
 package risbee.pig.core.net;
 
+import com.github.api.v2.services.GitHubException;
 import com.github.api.v2.services.GitHubServiceFactory;
 import org.openide.util.NbBundle;
+import risbee.pig.core.notification.ErrorNotifier;
 
 
 
@@ -47,7 +49,7 @@ public class Github {
 	/**
 	 * Initializes the communicator object with Github username.
 	 */
-	public Github(final String githubUsername) {
+	public Github(final String githubUsername) throws GitHubException {
 		this.setGithubUsername(githubUsername);
 		
 		ghsfactory = GitHubServiceFactory.newInstance();

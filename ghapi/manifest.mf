@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: risbee.pig.lib.ghapi
-OpenIDE-Module-Localizing-Bundle: risbee/pig/lib/ghapi/i18n/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.0
-

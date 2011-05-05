@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: risbee.pig.lib.flexjson
-OpenIDE-Module-Localizing-Bundle: risbee/pig/lib/flexjson/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.0
-

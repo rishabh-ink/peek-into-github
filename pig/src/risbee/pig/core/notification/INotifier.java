@@ -20,26 +20,23 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with peek-into-github. If not, see <http://www.gnu.org/licenses/>.
-*/
-package risbee.pig.core.net;
-
-import com.github.api.v2.services.GitHubException;
-import javax.swing.tree.DefaultMutableTreeNode;
+ */
+package risbee.pig.core.notification;
 
 /**
- * This interface must be implemented by the classes communicating with
- * Github.
+ * All classes that show a notification must implement this interface.
  * @author Rishabh Rao
  */
-public interface ICommunicator {
+public interface INotifier {
 	/**
-	 * This method refreshes the local data with fresh data from Github.
+	 * Shows a bubble notification message, which when clicked displays a
+	 * detailed message in a popup window.
+	 * @param ex The Exception that caused the error.
 	 */
-	public void refresh() throws GitHubException;
+	public void show(Exception ex);
 	
 	/**
-	 * Gets the ready-to-display tree made of the Github data.
-	 * @return A sub-tree which can be attached to the JTree's root node.
+	 * The path to the notification icon PNG image.
 	 */
-	public DefaultMutableTreeNode getTree() throws GitHubException;
+	public final String NOTIFICATION_ICON_PATH = "res/apple_worm_16.png";
 }

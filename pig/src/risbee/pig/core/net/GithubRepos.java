@@ -24,6 +24,7 @@ along with peek-into-github. If not, see <http://www.gnu.org/licenses/>.
 package risbee.pig.core.net;
 
 import com.github.api.v2.schema.Repository;
+import com.github.api.v2.services.GitHubException;
 import com.github.api.v2.services.RepositoryService;
 import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -47,7 +48,7 @@ public final class GithubRepos extends Github implements ICommunicator {
 	/**
 	 * Constructs the repositories handler.
 	 */
-	public GithubRepos(String githubUsername) {
+	public GithubRepos(String githubUsername) throws GitHubException {
 		super(githubUsername);
 		
 		// Initialize and refresh for the first time.
@@ -59,7 +60,7 @@ public final class GithubRepos extends Github implements ICommunicator {
 	 * Refreshes the list of repositories stored in <code>reposList</code>.
 	 */
 	@Override
-	public void refresh() {	
+	public void refresh() throws GitHubException {	
 		this.reposList = this.repoService.
 				getRepositories(super.getGithubUsername());
 	}
@@ -69,7 +70,7 @@ public final class GithubRepos extends Github implements ICommunicator {
 	 * @return A sub-tree which can be attached to the JTree's root node.
 	 */
 	@Override
-	public DefaultMutableTreeNode getTree() {
+	public DefaultMutableTreeNode getTree() throws RuntimeException {
 		DefaultMutableTreeNode subTree = new DefaultMutableTreeNode(NbBundle.getBundle(GithubRepos.class).getString("repositoriesRootNode"));
 		DefaultMutableTreeNode repoNode;
 		
