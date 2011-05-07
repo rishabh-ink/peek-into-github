@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--this design was created by Vacant (Chris Blunden), http://www.web-site.tk .
+Deep, version 1.5 created on 17/10/04 for OSWD.org ... DO NOT REMOVE this notice. Thanks. -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <title>Peek into Github</title>
+        <link rel="stylesheet" type="text/css" href="style.css" />
+    </head>
+    <body>
+        <div id="outer">
+            <div id="inner">
+                <div class="bgtext">
+                    peek
+                    <br/>
+                    into
+                    <br/>
+                    github
+                </div>
+                <div id="close">
+                    <a href="../index.html" title="close and go back home">x</a>
+                </div>
+                <div id="top">
+                    <a href="#top" title="back to top">^</a>
+                </div>
+                <!--greyed out links-->
+                <div id="text1">what is this thing?</div>
+                <div id="text2">download</div>
+                <div id="text3">bugged?</div>
+                <div id="text4">developer</div>
+                <div id="text5">help</div>
+                <div id="text6">license</div>
+                <div id="text7">stumped?</div>
+                <div id="text8">see</div>
+                <!--greyed out links end-->
+                <div id="urltext">
+                    <a href="../index.html" class="navigurl" title="click to return to the home page">home &raquo; </a>help
+                </div>
+                <div id="content">
+                    <a name="top"></a>
+                    <!-- very important! this is the anchor for the back to top feature. Remove it at your own risk! :P -->
+                    <div class="titleblock">installation</div>
+                    <p>Installing Peek into Github in your NetBeans IDE is easy.</p>
+					<p>You'll need:
+						<ul>
+							<li>NetBeans IDE 7.0 or later</li>
+							<li>A working Internet connection (for fetching data from github.com)</li>							
+						</ul>
+					</p>
+					<p>Simply follow these steps to get Peek into Github up and running in your NetBeans IDE:
+                    	<ol>
+                    		<li>Download Peek into Github. See the <a href='download.html'>download</a> page.</li>
+                    		<li>Extract the zipball at a convenient location.</li>
+							<li>You'll notice that you have extracted 3 <code>.nbm</code> files among others.</li>
+							<li>Start your NetBeans IDE.</li>
+							<li>On the menu bar, click the <strong>Tools</strong> &raquo; <strong>Plugins</strong> menu item.</li>
+							<li>In the <strong>Plugins</strong> window, click the <strong>Downloads</strong> tab.</li>
+							<li>In the <strong>Downloads</strong> tab, click the <strong>Add plugins...</strong> button.</li>
+							<li>In the <strong>Add Plugins</strong> window, browse to the location where you extracted the zipball.</li>
+							<li>Select the three <code>.nbm</code> files:
+								<ul>
+									<li><code>risbee-pig-core.nbm</code></li>
+									<li><code>risbee-pig-lib-githubjavasdk.nbm</code></li>
+									<li><code>risbee-pig-lib-gson.nbm</code></li>								
+								</ul>
+							</li>
+							<li>Click the <strong>Open</strong> button.</li>
+							<li>Click the <strong>Install</strong> button.</li>
+							<li>Follow the on-screen wizard's instructions and complete the installation.</li>
+						</ol>
+					</p>
+                    <div class="titleblock">startubg</div>
+                    <p>Once installed, Peek into Github can be launched by clicking the <strong>Window</strong> &raquo; <strong>Pig</strong> menu item. You should now see the Peek into Github panel on your right.</p>
+					<div class="titleblock">viewing all your repositories</div>
+                    <p></p>
+					<div class="titleblock">viewing individual repository details</div>
+                    <p></p>
+					<div class="titleblock">refreshing</div>
+                    <p></p>
+					<div class="titleblock">other options</div>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

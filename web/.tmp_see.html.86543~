@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--this design was created by Vacant (Chris Blunden), http://www.web-site.tk .
+Deep, version 1.5 created on 17/10/04 for OSWD.org ... DO NOT REMOVE this notice. Thanks. -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <title>Peek into Github</title>
+        <link rel="stylesheet" type="text/css" href="style.css" />
+    </head>
+    <body>
+        <div id="outer">
+            <div id="inner">
+                <div class="bgtext">
+                    peek
+                    <br/>
+                    into
+                    <br/>
+                    github
+                </div>
+                <div id="close">
+                    <a href="../index.html" title="close and go back home">x</a>
+                </div>
+                <div id="top">
+                    <a href="#top" title="back to top">^</a>
+                </div>
+                <!--greyed out links-->
+                <div id="text1">what is this thing?</div>
+                <div id="text2">download</div>
+                <div id="text3">bugged?</div>
+                <div id="text4">developer</div>
+                <div id="text5">help</div>
+                <div id="text6">license</div>
+                <div id="text7">stumped?</div>
+                <div id="text8">see</div>
+                <!--greyed out links end-->
+                <div id="urltext">
+                    <a href="../index.html" class="navigurl" title="click to return to the home page">home &raquo; </a>contact
+                </div>
+                <div id="content">
+                    <a name="top"></a>
+                    <!-- very important! this is the anchor for the back to top feature. Remove it at your own risk! :P -->
+                    <div class="titleblock">contact details</div>
+                    <p>
+                        You can contact me via:
+                        <ul>
+                            <li>
+                                <a href='http://rishabhsrao.wordpress.com'>http://rishabhsrao.wordpress.com</a>
+                            </li>
+                            <li>
+                                <a href='http://twitter.com/rishabhsrao'>http://twitter.com/rishabhsrao</a>
+                            </li>
+                            <li>
+                                <a href='http://facebook.com/rishabhsrao'>http://facebook.com/rishabhsrao</a>
+                            </li>
+                            <li>
+                                <a href='https://github.com/rishabhsrao'>http://github.com/rishabhsrao</a>
+                            </li>
+                        </ul>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
