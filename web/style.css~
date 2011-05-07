@@ -1,4 +1,4 @@
-body {background:url(img/bg.gif) repeat;
+body {background:url (img/bg.gif) repeat;
       margin:0;
 	  scrollbar-3dlight-color:#222;
       scrollbar-arrow-color:#FFF;
