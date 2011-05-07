@@ -8,17 +8,4 @@ http://twitter.com/rishabhsrao
 http://facebook.com/rishabhsrao
 http://github.com/rishabhsrao
 
-Installation instructions:
-1. Click Downloads and download the peek-into-github.zip file.
-2. Extract it to a convenient location.
-3. In NetBeans, go to Tools >> Plugins.
-4. Click the Downloaded tab.
-5. Click Add Plugins...
-6. Select all the 3 plugins that you extracted.
-7. Click Install.
-8. Follow the on-screen instructions and click Next till it installs.
-9. If prompted to restart your IDE, please do so.
-
-Feel free to drop me a message if you have any queries, suggestions, complaints etc. about peek-into-github!
-
-:)
+See http://rishabhsrao.github.com/peek-into-github for complete information.
