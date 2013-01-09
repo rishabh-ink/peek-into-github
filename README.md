@@ -1,8 +1,7 @@
 peek into github
-----------------
+================
 
-A NetBeans plugin which shows info from Github
-==============================================
+A NetBeans plugin which shows info from GitHub.
 
 version 1.0.0
 Developed by [Rishabh Rao](http://rishabhsrao.github.com)
