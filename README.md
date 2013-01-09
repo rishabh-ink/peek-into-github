@@ -1,5 +1,6 @@
 peek into github
 ----------------
+
 A NetBeans plugin which shows info from Github
 ==============================================
 
